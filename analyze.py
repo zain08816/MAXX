@@ -1,8 +1,12 @@
 import statistics
 import pandas as pd
+import numpy as np
+
+#bokeh
 from bokeh.io import output_file, show
-from bokeh.layouts import row
+from bokeh.layouts import row, gridplot, grid, column
 from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource
 
 # Imports the Google Cloud client library
 from google.cloud import language
@@ -55,28 +59,64 @@ for text in tweets:
 weighted_sentiment = [sentimentscore[i]*magnitudescore[i] for i in range(len(magnitudescore))]
 dates = [data[0] for data in tweets]
 
-print(dates)
-print(weighted_sentiment)
+# print(dates)
+# print(weighted_sentiment)
 
 for i, date in enumerate(dates):
     dates[i] = pd.to_datetime(date, format = "%Y-%m-%d %H:%M:%S")
 
-print(dates)
+# print(dates)
 x = dates
 y = weighted_sentiment
 
-# create graph
+
+for i, sent in enumerate(weighted_sentiment):
+    if sent == 0.0:
+        y.pop(i)
+        x.pop(i)
+print(y)
+
+average = abs(((max(y)*min(y))/2))
+print(average)
+
+
 
 # output to static HTML file
 output_file("lines.html")
 
 # create a new plot with a title and axis labels
-p = figure(title="Weighted Sentiment Over Time", x_axis_label='Date-Time', y_axis_label='Weighted Sentiment', x_axis_type="datetime")
+p = figure(plot_width = 800, plot_height = 400, title="Weighted Sentiment Over Time", x_axis_label='Date-Time', y_axis_label='Weighted Sentiment', x_axis_type="datetime")
 
-# add a line renderer with legend and line thickness
-p.line(x, y, legend="Tweet Sentiment.", line_width=2)
-# show the results
-show(p)
+# source = ColumnDataSource(data=dict(
+#     x=[min(x), max(x)],
+#     y1=[average*2, average*2],
+#     y2=[average*-2, average*-2],
+# ))
+# p.vline_stack(['y1', 'y2'], x='x', source=source)
+
+p.line(x = [min(x),max(x)], y = [average*2, average*2], line_width = 1)
+p.line(x = [min(x),max(x)], y = [average*-2, average*-2], line_width = 1)
+
+p.circle(x, y, legend="Tweet Sentiment.", size = 5, color="purple")
+
+
+total_sentiment = sum(y)
+if total_sentiment > average:
+    bar_color = "green"
+elif total_sentiment < average*-1:
+    bar_color = "red"
+else:
+    bar_color = "grey"
+
+total = figure(plot_width = 400, plot_height = 400, title = "Total Sentiment")
+
+total.vbar(x = [1], width = 0.25, bottom = 0, top = [total_sentiment], color = bar_color)
+
+
+
+
+#show graphs
+show(column(p, total))
 
 
 
@@ -85,5 +125,4 @@ show(p)
 # print(statistics.mean(sentimentscore))
 # print(statistics.mean(magnitudescore))
 
-# flagged_words = ['kill', 'gun', 'dead', 'suicide', 'shoot', 'hurt', 'depressed']
 
