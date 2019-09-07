@@ -1,5 +1,5 @@
 # MAXX
-/*
+
   Monitored
   Analysis for 
   eXtreme 
@@ -23,4 +23,3 @@
     Generalize for use with platforms other than Twitter
     Refine the analysis algorithm
     Base the algorithm purely on hard research
-*/
