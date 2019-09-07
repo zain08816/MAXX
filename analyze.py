@@ -35,7 +35,6 @@ for text in tweets:
     sentimentscore.append(sentiment.score)
     magnitudescore.append(sentiment.magnitude)
 
-print(tweets)
 print(statistics.mean(sentimentscore))
 print(statistics.mean(magnitudescore))
 
