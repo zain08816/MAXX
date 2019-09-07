@@ -56,6 +56,7 @@ for text in tweets:
     magnitudescore.append(sentiment.magnitude)
 
 
+#create the weitghted sentiment scores
 weighted_sentiment = [sentimentscore[i]*magnitudescore[i] for i in range(len(magnitudescore))]
 dates = [data[0] for data in tweets]
 
@@ -70,36 +71,39 @@ x = dates
 y = weighted_sentiment
 
 
+#remove 0 sentiment items (0 sentiment usually occurs when tweet is a link or image)
 for i, sent in enumerate(weighted_sentiment):
     if sent == 0.0:
         y.pop(i)
         x.pop(i)
 print(y)
 
+#find average sentiment
 average = abs(((max(y)*min(y))/2))
 print(average)
 
+#get outliers
+positive_outliers = [i for i in y if i >= average]
+negative_outliers = [i for i in y if i <= average*-1]
 
 
 # output to static HTML file
 output_file("lines.html")
 
 # create a new plot with a title and axis labels
-p = figure(plot_width = 800, plot_height = 400, title="Weighted Sentiment Over Time", x_axis_label='Date-Time', y_axis_label='Weighted Sentiment', x_axis_type="datetime")
+p = figure(plot_width = 1200, plot_height = 400, title="Weighted Sentiment Over Time", x_axis_label='Date-Time', y_axis_label='Weighted Sentiment', x_axis_type="datetime")
 
-# source = ColumnDataSource(data=dict(
-#     x=[min(x), max(x)],
-#     y1=[average*2, average*2],
-#     y2=[average*-2, average*-2],
-# ))
-# p.vline_stack(['y1', 'y2'], x='x', source=source)
+#plot average range
+p.line(x = [min(x),max(x)], y = [average, average], line_width = 1)
+p.line(x = [min(x),max(x)], y = [average*-1, average*-1], line_width = 1)
 
-p.line(x = [min(x),max(x)], y = [average*2, average*2], line_width = 1)
-p.line(x = [min(x),max(x)], y = [average*-2, average*-2], line_width = 1)
+#plot graph circles
+p.circle(x, y, legend="Tweet Sentiment.", size = 7, color="purple")
+p.circle(x, positive_outliers, legend="Positive Sentiment.", size = 10, color="green")
+p.circle(x, negative_outliers, legend="Negative Sentiment.", size = 10, color="red")
+p.line(x, y, line_width = 1,  color = "pink")
 
-p.circle(x, y, legend="Tweet Sentiment.", size = 5, color="purple")
-
-
+#change total sentiment colors
 total_sentiment = sum(y)
 if total_sentiment > average:
     bar_color = "green"
@@ -108,9 +112,11 @@ elif total_sentiment < average*-1:
 else:
     bar_color = "grey"
 
-total = figure(plot_width = 400, plot_height = 400, title = "Total Sentiment")
+total = figure(plot_width = 200, plot_height = 400, title = "Total Sentiment")
 
 total.vbar(x = [1], width = 0.25, bottom = 0, top = [total_sentiment], color = bar_color)
+
+
 
 
 
