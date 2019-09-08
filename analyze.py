@@ -32,13 +32,10 @@ print(tweets)
     # date = x[20:39]
     # tweets.append([date,tweet.lower()])
 
-
-
 # tweets_and_dates = zip(dates, tweets)
 
 sentimentscore = []
 magnitudescore = []
-
 
 # The text to analyze
 for text in tweets:
@@ -54,7 +51,6 @@ for text in tweets:
     print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
     sentimentscore.append(sentiment.score)
     magnitudescore.append(sentiment.magnitude)
-
 
 #create the weitghted sentiment scores
 weighted_sentiment = [sentimentscore[i]*magnitudescore[i] for i in range(len(magnitudescore))]
@@ -83,9 +79,17 @@ average = abs(((max(y)*min(y))/2))
 print(average)
 
 #get outliers
-positive_outliers = [i for i in y if i >= average]
-negative_outliers = [i for i in y if i <= average*-1]
-
+positive_outliers_y = []
+positive_outliers_x = []
+negative_outliers_y = []
+negative_outliers_x = []
+for i, sent in enumerate(y):
+    if sent >= average:
+        positive_outliers_y.append(sent)
+        positive_outliers_x.append(x[i])
+    if sent <= average*-1:
+        negative_outliers_y.append(sent)
+        negative_outliers_x.append(x[i])
 
 # output to static HTML file
 output_file("lines.html")
@@ -99,8 +103,8 @@ p.line(x = [min(x),max(x)], y = [average*-1, average*-1], line_width = 1)
 
 #plot graph circles
 p.circle(x, y, legend="Tweet Sentiment.", size = 7, color="purple")
-p.circle(x, positive_outliers, legend="Positive Sentiment.", size = 10, color="green")
-p.circle(x, negative_outliers, legend="Negative Sentiment.", size = 10, color="red")
+p.circle(positive_outliers_x, positive_outliers_y, legend="Positive Sentiment.", size = 10, color="green")
+p.circle(negative_outliers_x, negative_outliers_y, legend="Negative Sentiment.", size = 10, color="red")
 p.line(x, y, line_width = 1,  color = "pink")
 
 #change total sentiment colors
@@ -115,9 +119,6 @@ else:
 total = figure(plot_width = 200, plot_height = 400, title = "Total Sentiment")
 
 total.vbar(x = [1], width = 0.25, bottom = 0, top = [total_sentiment], color = bar_color)
-
-
-
 
 
 
