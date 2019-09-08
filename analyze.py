@@ -1,6 +1,5 @@
 import statistics
 import pandas as pd
-import numpy as np
 
 #bokeh
 from bokeh.io import output_file, show
@@ -114,7 +113,7 @@ p = figure(plot_width = 1200, plot_height = 400, title=top_title, x_axis_label='
 
 #plot average range
 p.line(x = [min(x),max(x)], y = [average+half, average+half], line_width = 1)
-p.line(x = [min(x),max(x)], y = [average, average], legend = 'Average Line', line_width = 2, color = 'black')
+p.line(x = [min(x),max(x)], y = [average, average], legend = 'Average Weighted Sentiment Line', line_width = 2, color = 'black')
 p.line(x = [min(x),max(x)], y = [average-half, average-half], line_width = 1)
 
 #plot graph circles
@@ -126,14 +125,29 @@ p.line(x, y, line_width = 1,  color = "pink")
 #change total sentiment colors
 total_sentiment = sum(y)
 if total_sentiment > average:
-    bar_color = "green"
+    sentiment_bar_color = "green"
 elif total_sentiment < average:
-    bar_color = "red"
+    sentiment_bar_color = "red"
 else:
-    bar_color = "grey"
+    sentiment_bar_color = "grey"
 
-total = figure(plot_width = 200, plot_height = 400, title = "Total Sentiment")
-total.vbar(x = [1], width = 0.25, bottom = 0, top = [total_sentiment], color = bar_color)
+if average > 0:
+    average_bar_color = "green"
+elif average == 0:
+    average_bar_color = "grey"
+else:
+    average_bar_color = 'red'
+
+
+total = figure(plot_width = 200, plot_height = 400, title = "Total User Sentiment")
+total.vbar(x = [0], width = 0.25, bottom = 0, top = [total_sentiment], color = sentiment_bar_color)
+
+average_weight = figure(plot_width = 200, plot_height = 400, title = "Average Weighted Sentiment")
+average_weight.vbar(x = [0], width = 0.25, bottom = 0, top = [average], color = average_bar_color)
+
+min_max = figure(plot_width = 200, plot_height = 400, title = "Highest vs Lowest Weighted Sentiment")
+min_max.vbar(x = [0], width = 0.25, bottom = 0, top = [max(y)], color = 'green')
+min_max.vbar(x = [0.3], width = 0.25, bottom = 0, top = [min(y)], color = 'red')
 
 compare = figure(plot_width = 200, plot_height = 200, title = "Negative Outliers vs Positive Outliers")
 compare.vbar(x = [0], width = 0.25, bottom = 0, top = [len(negative_outliers_y)], color = 'red')
@@ -147,7 +161,7 @@ average.vbar(x = [0.3], width = 0.25, bottom = 0, top = [statistics.mean(magnitu
 #show graphs
 l = layout([
     [p],
-    [total, compare, average]
+    [total, min_max, compare, average, average_weight]
 ], sizing_mode = 'stretch_both')
 show(l)
 
