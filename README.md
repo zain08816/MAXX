@@ -23,3 +23,5 @@
     Generalize for use with platforms other than Twitter
     Refine the analysis algorithm
     Base the algorithm purely on hard research
+
+Devpost: https://devpost.com/software/maxx
