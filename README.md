@@ -1,4 +1,4 @@
-# MAXX
+## MAXX
 
   Monitored
   Analysis for 
@@ -9,6 +9,7 @@
   
   Input:
     Twitter account
+    
   Output:
     Risk assessment of given account
     
@@ -20,7 +21,7 @@
     many risk factors are used in combination with each other
     
   Future plans:
-    Generalize for use with platforms other than Twitter
+    Generalize for use with platforms other than Twitter (Facebook, Reddit, Instagram)
     Refine the analysis algorithm
     Base the algorithm purely on hard research
 
