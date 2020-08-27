@@ -15,8 +15,8 @@ import twitter
 
 
 # for more information on Twitter's OAuth implementation. 
-CONSUMER_KEY = IQKbtAYlXLripLGPWd0HUA
-CONSUMER_SECRET = GgDYlkSvaPxGxC4X8liwpUoqKwwr3lCADbz8A7ADU 
+CONSUMER_KEY = 
+CONSUMER_SECRET = 
 OAUTH_TOKEN = 
 OAUTH_TOKEN_SECRET = '' 
 auth = twitter . oauth . OAuth ( OAUTH_TOKEN , OAUTH_TOKEN_SECRET , CONSUMER_KEY , CONSUMER_SECRET ) 
