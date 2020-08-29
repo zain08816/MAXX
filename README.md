@@ -5,6 +5,8 @@
   eXtreme 
   eXpressions
   
+  *Twitter API Key in twitter.py is deauthorized, replace with your own key.*
+  
   An automated web-scraper which analyzes digital expression (i.e. Twitter posts) for linguistic patterns which have been         statistically related to extreme states of mind, such as mental illness or risk of harming one’s self and/or others.
   
   Input:
